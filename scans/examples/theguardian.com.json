@@ -1,0 +1,217 @@
+{
+  "url": "https://www.theguardian.com/international",
+  "mode": "otari",
+  "evidence": {
+    "url": "https://theguardian.com/",
+    "finalUrl": "https://www.theguardian.com/international",
+    "status": 200,
+    "fetchedAt": "2026-11-11T15:52:31.946Z",
+    "site": "theguardian.com",
+    "thirdParties": [
+      {
+        "host": "sb.scorecardresearch.com",
+        "urls": [
+          "https://sb.scorecardresearch.com/p?c1=2&c2=6035250&cv=2.0&cj=1&cs_ucfr=0&comscorekw=international"
+        ],
+        "tags": [
+          "img"
+        ],
+        "tracker": {
+          "company": "Comscore",
+          "category": "analytics"
+        }
+      },
+      {
+        "host": "api.nextgen.guardianapps.co.uk",
+        "urls": [
+          "https://api.nextgen.guardianapps.co.uk/"
+        ],
+        "tags": [
+          "link"
+        ]
+      },
+      {
+        "host": "assets.guim.co.uk",
+        "urls": [
+          "https://assets.guim.co.uk/polyfill.io/v3/polyfill.min.js?rum=0&features=es6%2Ces7%2Ces2017%2Ces2018%2Ces2019%2Cdefault-3.6%2CHTMLPictureElement%2CIntersectionObserver%2CIntersectionObserverEntry%2CURLSearchParams%2Cfetch%2CNodeList.prototype.forEach%2Cnavigator.sendBeacon%2Cperformance.now%2CPromise.allSettled&flags=gated&callback=guardianPolyfilled&unknown=polyfill&cacheClear=1",
+          "https://assets.guim.co.uk/assets/frameworks.client.web.d4864592db0ae9c44631.js",
+          "https://assets.guim.co.uk/assets/index.client.web.7c3328f31eed321c47cf.js"
+        ],
+        "tags": [
+          "script",
+          "link"
+        ]
+      },
+      {
+        "host": "i.guim.co.uk",
+        "urls": [
+          "https://i.guim.co.uk/img/media/728027c4b75a7ea05d5ee078fa23262ff46fb0d0/474_0_3383_3384/master/3383.jpg?width=98&dpr=1&s=none&crop=1%3A1",
+          "https://i.guim.co.uk/img/media/7d5f6acbcabf3e324e11a5f380ae6d95c0668817/848_0_2160_2160/master/2160.jpg?width=98&dpr=1&s=none&crop=1%3A1",
+          "https://i.guim.co.uk/img/media/960ff8db9a9c907989ffe0a5009bf19d6d699571/472_0_4000_4000/master/4000.jpg?width=98&dpr=1&s=none&crop=1%3A1"
+        ],
+        "tags": [
+          "img",
+          "link"
+        ]
+      },
+      {
+        "host": "interactive.guim.co.uk",
+        "urls": [
+          "https://interactive.guim.co.uk/"
+        ],
+        "tags": [
+          "link"
+        ]
+      },
+      {
+        "host": "j.ophan.co.uk",
+        "urls": [
+          "https://j.ophan.co.uk/",
+          "https://j.ophan.co.uk/"
+        ],
+        "tags": [
+          "link"
+        ]
+      }
+    ],
+    "signatures": [],
+    "cookies": [
+      {
+        "name": "gu_client_ab_tests",
+        "thirdParty": false
+      },
+      {
+        "name": "gu_client_ab_tests",
+        "thirdParty": false
+      },
+      {
+        "name": "gu_v2_mvt_id",
+        "thirdParty": false
+      },
+      {
+        "name": "gu_v2_mvt_id",
+        "thirdParty": false
+      },
+      {
+        "name": "GU_mvt_id",
+        "thirdParty": false
+      },
+      {
+        "name": "GU_geo_country",
+        "thirdParty": false
+      }
+    ],
+    "policyLinks": [
+      "https://www.theguardian.com/info/privacy"
+    ],
+    "counts": {
+      "advertising": 0,
+      "analytics": 1,
+      "social": 0,
+      "session-replay": 0,
+      "fingerprinting": 0,
+      "consent": 0,
+      "other": 5
+    },
+    "limitations": [
+      "Only the homepage HTML is read; scripts injected later by a tag manager are seen through their inline signatures, not loaded.",
+      "No cookies are accepted and no consent banner is clicked, so this is what a first-time visitor's browser is asked to load before saying yes."
+    ]
+  },
+  "policyUrl": "https://www.theguardian.com/info/privacy",
+  "claims": [],
+  "analysis": {
+    "companies": [
+      "Comscore"
+    ],
+    "counts": {
+      "advertising": 0,
+      "analytics": 1,
+      "session-replay": 0,
+      "social": 0,
+      "fingerprinting": 0,
+      "consent": 0,
+      "other": 5
+    },
+    "ad_companies": [],
+    "replay_companies": [],
+    "third_party_cookies": 0,
+    "matches_local": true
+  },
+  "verdicts": [],
+  "report": {
+    "grade": "A",
+    "headline": "The Guardian generally respects your privacy with minimal tracking.",
+    "summary": [
+      "Few trackers were detected on the site.",
+      "The site uses analytics, likely for understanding readership, but avoids many intrusive tracking methods.",
+      "No advertising or session replay tracking was found."
+    ],
+    "tips": [
+      "Consider using a browser extension designed to block third-party cookies for an extra layer of privacy.",
+      "Review The Guardian's privacy policy to understand their data practices in detail.",
+      "Be mindful of links to external sites, as their privacy practices may differ."
+    ]
+  },
+  "models": {
+    "researcher": "alibaba/qwen3-235b-a22b-instruct-2507",
+    "analyst": "alibaba/qwen3-coder-480b-a35b-instruct",
+    "judge": "meta/llama-4-maverick-17b-instruct",
+    "writer": "google/gemma-3-27b-it"
+  },
+  "traces": [
+    {
+      "role": "researcher",
+      "requested": "alibaba/qwen3-235b-a22b-instruct-2507",
+      "tools": [
+        "otari_web_search",
+        "otari_web_fetch"
+      ],
+      "ms": 17223,
+      "ok": true,
+      "guardrails": "[{\"profile\":\"prompt-injection\",\"mode\":\"monitor\",\"valid\":null,\"score\":null,\"status\":\"unavailable\",\"reason\":\"not_configured\"}]",
+      "served": "alibaba/qwen3-235b-a22b-instruct-2507",
+      "promptTokens": 4865,
+      "completionTokens": 138,
+      "toolCalls": []
+    },
+    {
+      "role": "researcher",
+      "requested": "alibaba/qwen3-235b-a22b-instruct-2507",
+      "tools": [],
+      "ms": 2589,
+      "ok": true,
+      "guardrails": "[{\"profile\":\"prompt-injection\",\"mode\":\"monitor\",\"valid\":null,\"score\":null,\"status\":\"unavailable\",\"reason\":\"not_configured\"}]",
+      "served": "alibaba/qwen3-235b-a22b-instruct-2507",
+      "promptTokens": 430,
+      "completionTokens": 22,
+      "toolCalls": []
+    },
+    {
+      "role": "analyst",
+      "requested": "alibaba/qwen3-coder-480b-a35b-instruct",
+      "tools": [
+        "otari_code_execution"
+      ],
+      "ms": 5171,
+      "ok": true,
+      "served": "alibaba/qwen3-coder-480b-a35b-instruct",
+      "promptTokens": 2470,
+      "completionTokens": 858,
+      "toolCalls": []
+    },
+    {
+      "role": "writer",
+      "requested": "google/gemma-3-27b-it",
+      "tools": [],
+      "ms": 3293,
+      "ok": true,
+      "served": "google/gemma-3-27b-it",
+      "promptTokens": 181,
+      "completionTokens": 122,
+      "toolCalls": []
+    }
+  ],
+  "warnings": [],
+  "finishedAt": "2026-11-11T15:53:13.208Z"
+}

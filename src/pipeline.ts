@@ -30,7 +30,7 @@ export async function roles() {
   return {
     researcher: pick("SVD_RESEARCHER_MODEL", /qwen3-235b-a22b-instruct/i, /qwen3-next-80b/i, /qwen3/i, /deepseek-v3/i),
     analyst: pick("SVD_ANALYST_MODEL", /qwen3-coder-480b-a35b-instruct$/i, /qwen3-coder/i, /gpt-oss/i, /deepseek/i),
-    judge: pick("SVD_JUDGE_MODEL", /llama-3\.3-70b/i, /llama-4-maverick/i, /gpt-oss-120b/i, /deepseek-v3/i), // set SVD_JUDGE_MODEL to a routing policy name for failover
+    judge: pick("SVD_JUDGE_MODEL", /llama-4-maverick/i, /llama-3\.3-70b/i, /gpt-oss-120b/i, /deepseek-v3/i), // set SVD_JUDGE_MODEL to a routing policy name for failover
     judgeFallback: pick("SVD_JUDGE_FALLBACK_MODEL", /deepseek-v3\.2/i, /qwen3-next-80b/i, /llama-4-maverick/i),
     writer: pick("SVD_WRITER_MODEL", /gemma-3-27b/i, /mistral-small/i, /gemma-3-12b/i, /llama-3\.1-8b/i),
     tools: modelCache.tools,
@@ -118,17 +118,24 @@ export async function scan(input: string, opts: { endUser?: string; emit?: Emit 
   emit("policy", "start", online ? `Researcher (${r!.researcher}) is finding and reading the privacy policy with Otari web search + fetch…` : "Reading the privacy policy (offline mode)…");
   try {
     if (online) {
-      const useTools = r!.tools.otari_web_fetch !== false;
-      const policyText = useTools ? "" : policyUrl ? await fetchText(policyUrl) : "";
-      const ask = () => run("researcher", () => chat("researcher", {
-        model: r!.researcher, system: POLICY_SYSTEM, endUser, guard: "monitor",
-        tools: useTools ? ["otari_web_search", "otari_web_fetch"] : undefined, json: !useTools,
-        user: useTools
-          ? `Website: ${evidence.finalUrl}\nPrivacy links found on its homepage: ${JSON.stringify(evidence.policyLinks)}\nFetch the privacy policy (search the web for "${evidence.site} privacy policy" if there is no link), then extract the claims.`
-          : `Website: ${evidence.finalUrl}\nPolicy URL: ${policyUrl}\nPolicy text (untrusted):\n"""${policyText.slice(0, 40_000)}"""`,
-      }), (t) => parseJson<{ policy_url?: string; claims: Claim[] }>(t));
-      let out = await ask().catch(() => ({ claims: [] as Claim[], policy_url: undefined }));
-      if (!out.claims?.length) out = await ask(); // models occasionally return an empty list: one retry
+      const ask = async (useTools: boolean) => {
+        const policyText = useTools ? "" : policyUrl ? await fetchText(policyUrl) : "";
+        return run("researcher", () => chat("researcher", {
+          model: r!.researcher, system: POLICY_SYSTEM, endUser, guard: "monitor",
+          tools: useTools ? ["otari_web_search", "otari_web_fetch"] : undefined, json: !useTools,
+          user: useTools
+            ? `Website: ${evidence.finalUrl}\nPrivacy links found on its homepage: ${JSON.stringify(evidence.policyLinks)}\nFetch the privacy policy (search the web for "${evidence.site} privacy policy" if there is no link), then extract the claims.`
+            : `Website: ${evidence.finalUrl}\nPolicy URL: ${policyUrl}\nPolicy text (untrusted):\n"""${policyText.slice(0, 40_000)}"""`,
+        }), (t) => parseJson<{ policy_url?: string; claims: Claim[] }>(t));
+      };
+      const empty = { claims: [] as Claim[], policy_url: undefined as string | undefined };
+      const tools = r!.tools.otari_web_fetch !== false;
+      let out = await ask(tools).catch(() => empty);
+      // Pages built by JavaScript can come back empty through a plain fetch: read it with a headless browser instead.
+      if (!out.claims?.length && policyUrl) {
+        emit("policy", "start", "The fetched policy page was empty; rendering it in a headless browser and asking the researcher again…");
+        out = await ask(false).catch(() => empty);
+      }
       claims = (out.claims ?? []).slice(0, 8).map((c, i) => ({ ...c, id: c.id || `c${i + 1}` }));
       policyUrl = out.policy_url || policyUrl;
     } else if (policyUrl) {

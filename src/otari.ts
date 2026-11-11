@@ -62,7 +62,7 @@ async function chatOnce(role: string, o: ChatOptions): Promise<{ text: string; t
   }
   if (o.guard) body.guardrails = [{ profile: process.env.OTARI_GUARDRAIL_PROFILE || "prompt-injection", mode: o.guard }];
   if (o.endUser) body.user = o.endUser;
-  if (o.json && !o.tools?.length) body.response_format = { type: "json_object" };
+  // response_format is not supported by every provider behind Otari (e.g. Bedrock); prompts ask for JSON instead.
   const trace: Trace = { role, requested: o.model, tools: o.tools ?? [], ms: 0, ok: false };
   const res = await fetch(`${OTARI_URL}/chat/completions`, {
     method: "POST",
