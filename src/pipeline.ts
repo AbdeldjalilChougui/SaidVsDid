@@ -31,6 +31,7 @@ export async function roles() {
     researcher: pick("SVD_RESEARCHER_MODEL", /qwen3-235b-a22b-instruct/i, /qwen3-next-80b/i, /qwen3/i, /deepseek-v3/i),
     analyst: pick("SVD_ANALYST_MODEL", /qwen3-coder-480b-a35b-instruct$/i, /qwen3-coder/i, /gpt-oss/i, /deepseek/i),
     judge: pick("SVD_JUDGE_MODEL", /llama-3\.3-70b/i, /llama-4-maverick/i, /gpt-oss-120b/i, /deepseek-v3/i), // set SVD_JUDGE_MODEL to a routing policy name for failover
+    judgeFallback: pick("SVD_JUDGE_FALLBACK_MODEL", /deepseek-v3\.2/i, /qwen3-next-80b/i, /llama-4-maverick/i),
     writer: pick("SVD_WRITER_MODEL", /gemma-3-27b/i, /mistral-small/i, /gemma-3-12b/i, /llama-3\.1-8b/i),
     tools: modelCache.tools,
     available: open,
@@ -119,13 +120,15 @@ export async function scan(input: string, opts: { endUser?: string; emit?: Emit 
     if (online) {
       const useTools = r!.tools.otari_web_fetch !== false;
       const policyText = useTools ? "" : policyUrl ? await fetchText(policyUrl) : "";
-      const out = await run("researcher", () => chat("researcher", {
+      const ask = () => run("researcher", () => chat("researcher", {
         model: r!.researcher, system: POLICY_SYSTEM, endUser, guard: "monitor",
         tools: useTools ? ["otari_web_search", "otari_web_fetch"] : undefined, json: !useTools,
         user: useTools
           ? `Website: ${evidence.finalUrl}\nPrivacy links found on its homepage: ${JSON.stringify(evidence.policyLinks)}\nFetch the privacy policy (search the web for "${evidence.site} privacy policy" if there is no link), then extract the claims.`
           : `Website: ${evidence.finalUrl}\nPolicy URL: ${policyUrl}\nPolicy text (untrusted):\n"""${policyText.slice(0, 40_000)}"""`,
       }), (t) => parseJson<{ policy_url?: string; claims: Claim[] }>(t));
+      let out = await ask().catch(() => ({ claims: [] as Claim[], policy_url: undefined }));
+      if (!out.claims?.length) out = await ask(); // models occasionally return an empty list: one retry
       claims = (out.claims ?? []).slice(0, 8).map((c, i) => ({ ...c, id: c.id || `c${i + 1}` }));
       policyUrl = out.policy_url || policyUrl;
     } else if (policyUrl) {
@@ -161,12 +164,19 @@ export async function scan(input: string, opts: { endUser?: string; emit?: Emit 
   if (claims.length) {
     emit("judge", "start", online ? `Judge (${r!.judge}) is checking each promise against the evidence, behind a prompt-injection guardrail…` : "Checking promises (rule-based)…");
     try {
-      verdicts = online
-        ? (await run("judge", () => chat("judge", {
-          model: r!.judge, system: JUDGE_SYSTEM, endUser, guard: "block", json: true,
-          user: `CLAIMS:\n${JSON.stringify(claims)}\n\nEVIDENCE (what the homepage loads before consent):\n${JSON.stringify(evidenceBrief(evidence))}`,
-        }), (t) => parseJson<{ verdicts: Verdict[] }>(t))).verdicts ?? []
-        : offlineVerdicts(claims, evidence);
+      const judgeWith = (model: string) => run("judge", () => chat("judge", {
+        model, system: JUDGE_SYSTEM, endUser, guard: "block", json: true,
+        user: `CLAIMS:\n${JSON.stringify(claims)}\n\nEVIDENCE (what the homepage loads before consent):\n${JSON.stringify(evidenceBrief(evidence))}`,
+      }), (t) => parseJson<{ verdicts: Verdict[] }>(t));
+      if (online) {
+        let out: { verdicts: Verdict[] };
+        try { out = await judgeWith(r!.judge); } catch (e) {
+          if (e instanceof OtariError && e.code === "guardrail_violation") throw e;
+          emit("judge", "start", `Judge ${r!.judge} failed (${(e as Error).message.slice(0, 60)}); falling back to ${r!.judgeFallback}…`);
+          out = await judgeWith(r!.judgeFallback);
+        }
+        verdicts = out.verdicts ?? [];
+      } else verdicts = offlineVerdicts(claims, evidence);
       const bad = verdicts.filter((v) => v.verdict === "contradicted").length;
       emit("judge", "ok", `${bad} of ${verdicts.length} promises contradicted by what the site loads`, verdicts);
     } catch (err) {

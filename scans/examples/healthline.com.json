@@ -5,7 +5,7 @@
     "url": "https://healthline.com/",
     "finalUrl": "https://www.healthline.com/",
     "status": 200,
-    "fetchedAt": "2026-11-11T15:33:54.356Z",
+    "fetchedAt": "2026-11-11T15:35:56.398Z",
     "site": "healthline.com",
     "thirdParties": [
       {
@@ -158,42 +158,42 @@
       "id": "c2",
       "topic": "sharing",
       "claim": "Personal information is shared with other RVO Health brands and business divisions.",
-      "quote": "As discussed below, you should be aware that RVO Health makes your personal information available to each of its business divisions and operating brands, including the personal information that is the subject of this Notice."
+      "quote": "RVO Health makes your personal information available to each of its business divisions and operating brands, including the personal information that is the subject of this Notice."
     },
     {
       "id": "c3",
       "topic": "advertising",
-      "claim": "Healthline uses personal information for targeted advertising on third-party websites.",
-      "quote": "Engaging in targeted advertising on other websites or mobile applications, even if those websites or mobile applications are owned by third parties."
+      "claim": "Users may receive tailored advertisements based on their browsing behavior.",
+      "quote": "You may receive tailored advertisements when using one of our websites or mobile applications."
     },
     {
       "id": "c4",
       "topic": "analytics",
       "claim": "Healthline uses Google Analytics to understand website traffic and usage patterns.",
-      "quote": "Analytics vendors in order to understand our website traffic and usage patterns, optimize our website, track marketing conversions, and identify potential new customers or users."
+      "quote": "Our digital properties may also deploy third-party analytics tools, such as Google Analytics."
     },
     {
       "id": "c5",
       "topic": "cookies",
-      "claim": "Healthline uses cookies to recognize users, store preferences, and analyze traffic.",
-      "quote": "Our website uses different types of cookies to, among other things, automatically recognize you when you return to our site, store information regarding your preferences, and analyze traffic to our site."
+      "claim": "The site uses cookies to recognize returning users and analyze traffic.",
+      "quote": "Cookies are small text files that can be used by websites to make a user’s experience more efficient. Our website uses different types of cookies to, among other things, automatically recognize you when you return to our site, store information regarding your preferences, and analyze traffic to our site."
     },
     {
       "id": "c6",
-      "topic": "third-parties",
-      "claim": "Personal information is disclosed to third-party service providers, including IT, hosting, and marketing vendors.",
-      "quote": "We may disclose your personal information to the following types of individuals or entities: Service providers we use to facilitate our business operations and administer our services."
+      "topic": "tracking",
+      "claim": "Healthline does not honor \"Do Not Track\" signals from browsers.",
+      "quote": "Please note that our websites do not honor “Do Not Track” signals, and such signals will not impact the operation of our websites."
     },
     {
       "id": "c7",
-      "topic": "tracking",
-      "claim": "Healthline does not honor \"Do Not Track\" signals but recognizes Global Privacy Control.",
-      "quote": "Please note that our websites do not honor “Do Not Track” signals, and such signals will not impact the operation of our websites. We do recognize the Global Privacy Control."
+      "topic": "third-parties",
+      "claim": "Personal information is disclosed to third-party marketing vendors like Meta and LinkedIn.",
+      "quote": "Examples of these vendors include Meta and LinkedIn."
     },
     {
       "id": "c8",
       "topic": "retention",
-      "claim": "Personal information is retained as long as there is a legitimate business need or as required by law.",
+      "claim": "Personal information is retained as long as there's a legitimate business need or legal requirement.",
       "quote": "Healthline will retain the personal information it collects and uses so long as it has a legitimate business need to do so, or as required by law (e.g., for tax, legal, accounting or other purposes), whichever is the longer."
     }
   ],
@@ -221,19 +221,67 @@
     "third_party_cookies": 0,
     "matches_local": false
   },
-  "verdicts": [],
+  "verdicts": [
+    {
+      "id": "c1",
+      "verdict": "consistent",
+      "evidence": "Amazon",
+      "explanation": "The evidence shows Amazon advertising scripts loading, which is consistent with the claim of selling personal information to marketing and advertising vendors."
+    },
+    {
+      "id": "c2",
+      "verdict": "unclear",
+      "evidence": "",
+      "explanation": "The homepage does not provide evidence of personal information being shared with other RVO Health brands and business divisions."
+    },
+    {
+      "id": "c3",
+      "verdict": "consistent",
+      "evidence": "Amazon, Google",
+      "explanation": "The evidence shows Amazon and Google advertising scripts loading, which is consistent with the claim of receiving tailored advertisements based on browsing behavior."
+    },
+    {
+      "id": "c4",
+      "verdict": "consistent",
+      "evidence": "Google",
+      "explanation": "The evidence shows Google Tag Manager container and Google Analytics scripts loading, which is consistent with the claim of using Google Analytics to understand website traffic and usage patterns."
+    },
+    {
+      "id": "c5",
+      "verdict": "consistent",
+      "eplanation": "The evidence shows cookies being set, which is consistent with the claim of using cookies to recognize returning users and analyze traffic."
+    },
+    {
+      "id": "c6",
+      "verdict": "unclear",
+      "evidence": "",
+      "explanation": "The homepage does not provide evidence of honoring or not honoring Do Not Track signals from browsers."
+    },
+    {
+      "id": "c7",
+      "verdict": "unclear",
+      "evidence": "",
+      "explanation": "The evidence does not show Meta or LinkedIn loading, but it also does not rule out the possibility of personal information being disclosed to these vendors."
+    },
+    {
+      "id": "c8",
+      "verdict": "unclear",
+      "evidence": "",
+      "explanation": "The homepage does not provide evidence of personal information retention periods or policies."
+    }
+  ],
   "report": {
     "grade": "C",
-    "headline": "Healthline shares personal information for targeted advertising and with its parent company.",
+    "headline": "Healthline shares data for advertising, but isn't fully transparent about all practices.",
     "summary": [
-      "Healthline explicitly states it *sells* personal data to advertising vendors.",
-      "Information is shared across all RVO Health brands (including Healthline).",
-      "While they recognize Global Privacy Control, they ignore 'Do Not Track' requests."
+      "Healthline explicitly states it sells data to advertising vendors.",
+      "The site uses common trackers like Google Analytics and Amazon advertising scripts.",
+      "Several data practices, like honoring 'Do Not Track' requests and data retention policies, are unclear."
     ],
     "tips": [
-      "Use a browser extension designed to block third-party tracking.",
-      "Review and adjust your cookie preferences in your browser settings.",
-      "Check Healthline's privacy policy regularly for updates."
+      "Use a browser extension designed to block trackers and third-party cookies.",
+      "Review Healthline's privacy policy carefully to understand their data practices.",
+      "Adjust your ad personalization settings within your browser and Google account."
     ]
   },
   "models": {
@@ -247,12 +295,12 @@
       "role": "researcher",
       "requested": "alibaba/qwen3-235b-a22b-instruct-2507",
       "tools": [],
-      "ms": 84925,
+      "ms": 31385,
       "ok": true,
       "guardrails": "[{\"profile\":\"prompt-injection\",\"mode\":\"monitor\",\"valid\":null,\"score\":null,\"status\":\"unavailable\",\"reason\":\"not_configured\"}]",
       "served": "alibaba/qwen3-235b-a22b-instruct-2507",
       "promptTokens": 7393,
-      "completionTokens": 645,
+      "completionTokens": 595,
       "toolCalls": []
     },
     {
@@ -261,7 +309,7 @@
       "tools": [
         "otari_code_execution"
       ],
-      "ms": 6140,
+      "ms": 5821,
       "ok": true,
       "served": "alibaba/qwen3-coder-480b-a35b-instruct",
       "promptTokens": 2586,
@@ -272,24 +320,25 @@
       "role": "judge",
       "requested": "meta/llama-3.3-70b-instruct",
       "tools": [],
-      "ms": 225,
-      "ok": false,
-      "error": "502  guardrail profile 'prompt-injection' requested but no guardrails service is configured. Set OTARI_GUARDRAILS_URL on the gateway or pass `url` on the guardrail entry."
+      "ms": 16853,
+      "ok": true,
+      "served": "meta/llama-3.3-70b-instruct",
+      "promptTokens": 1005,
+      "completionTokens": 393,
+      "toolCalls": []
     },
     {
       "role": "writer",
       "requested": "google/gemma-3-27b-it",
       "tools": [],
-      "ms": 2844,
+      "ms": 2440,
       "ok": true,
       "served": "google/gemma-3-27b-it",
-      "promptTokens": 730,
-      "completionTokens": 118,
+      "promptTokens": 994,
+      "completionTokens": 125,
       "toolCalls": []
     }
   ],
-  "warnings": [
-    "judge: 502  guardrail profile 'prompt-injection' requested but no guardrails service is configured. Set OTARI_GUARDRAILS_URL on the gateway or pass `url` on the guardrail entry."
-  ],
-  "finishedAt": "2026-11-11T15:35:39.294Z"
+  "warnings": [],
+  "finishedAt": "2026-11-11T15:37:03.567Z"
 }

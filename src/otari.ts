@@ -68,7 +68,7 @@ async function chatOnce(role: string, o: ChatOptions): Promise<{ text: string; t
     method: "POST",
     headers: { Authorization: `Bearer ${OTARI_KEY}`, "Content-Type": "application/json" },
     body: JSON.stringify(body),
-    signal: AbortSignal.timeout(180_000),
+    signal: AbortSignal.timeout(150_000),
   });
   trace.ms = Date.now() - t0;
   trace.guardrails = res.headers.get("otari-guardrails") ?? undefined;
