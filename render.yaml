@@ -1,0 +1,18 @@
+# One-click deploy on Render: New → Blueprint → pick this repo. Set OTARI_API_KEY in the dashboard when asked.
+services:
+  - type: web
+    name: said-vs-did
+    runtime: node
+    plan: free
+    buildCommand: corepack enable && pnpm install --frozen-lockfile
+    startCommand: pnpm start
+    healthCheckPath: /api/config
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: OTARI_API_KEY
+        sync: false
+      - key: SVD_SCANS_PER_HOUR
+        value: "5"
+      - key: SVD_SCANS_PER_DAY
+        value: "100"

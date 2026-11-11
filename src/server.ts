@@ -15,7 +15,27 @@ app.get("/api/config", async (_req, res) => {
   catch (e) { res.json({ mode: "otari", gateway: OTARI_URL, error: (e as Error).message }); }
 });
 
+// Public deployments: cap scans so the Otari credits can't be drained (per visitor per hour, and per day overall).
+const PER_HOUR = Number(process.env.SVD_SCANS_PER_HOUR || 5), PER_DAY = Number(process.env.SVD_SCANS_PER_DAY || 100);
+const hits = new Map<string, number[]>(); let day = { date: "", count: 0 };
+function allow(ip: string) {
+  const now = Date.now(), today = new Date().toISOString().slice(0, 10);
+  if (day.date !== today) day = { date: today, count: 0 };
+  const recent = (hits.get(ip) ?? []).filter((t) => now - t < 3_600_000);
+  if (recent.length >= PER_HOUR) return `You have used your ${PER_HOUR} scans for this hour. Try again later.`;
+  if (day.count >= PER_DAY) return "The demo's daily scan limit is reached. Try again tomorrow, or run it yourself from GitHub.";
+  recent.push(now); hits.set(ip, recent); day.count++;
+  return "";
+}
+app.set("trust proxy", true);
+
 app.get("/api/scan", async (req, res) => {
+  const blocked = allow(req.ip ?? "?");
+  if (blocked) {
+    res.set({ "Content-Type": "text/event-stream", "Cache-Control": "no-cache" });
+    res.write(`data: ${JSON.stringify({ step: "budget", status: "fail", detail: blocked })}\n\n`);
+    return res.end();
+  }
   const url = String(req.query.url ?? ""), user = String(req.query.user ?? "").slice(0, 64).replace(/[^\w.-]/g, "") || undefined;
   res.set({ "Content-Type": "text/event-stream", "Cache-Control": "no-cache", Connection: "keep-alive" });
   res.flushHeaders();
